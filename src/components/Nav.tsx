@@ -18,16 +18,20 @@ const responsiveCSS = `
   .nav-root {
     position: fixed;
     top: 0; left: 0; right: 0;
+    width: 100%;
+    box-sizing: border-box;
     z-index: 100;
     padding: 0 32px;
     height: 64px;
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
+    overflow: visible;
   }
   .nav-inner {
     max-width: 1200px;
     width: 100%;
+    min-width: 0;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -43,7 +47,9 @@ const responsiveCSS = `
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
   }
+  .nav-actions button { flex-shrink: 0; }
   .nav-burger {
     display: none;
     width: 38px;
@@ -70,11 +76,16 @@ const responsiveCSS = `
 
   .nav-mobile-menu {
     display: none;
-    position: fixed;
-    top: 64px; left: 0; right: 0;
+    position: absolute;          /* au lieu de fixed (piège backdrop-filter iOS) */
+    top: 100%;                   /* juste sous la barre */
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
     max-height: calc(100vh - 64px);
     max-height: calc(100dvh - 64px);
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 12px 20px 24px;
     flex-direction: column;
     gap: 4px;
@@ -120,6 +131,8 @@ const responsiveCSS = `
     .nav-root { padding: 0 16px; }
     .nav-actions { gap: 6px; }
     .nav-hire { display: none !important; }
+    .nav-actions button { padding-left: 8px !important; padding-right: 8px !important; }
+    .nav-actions .nav-burger { padding-left: 0 !important; padding-right: 0 !important; }
   }
 
   /* Très petits écrans */
