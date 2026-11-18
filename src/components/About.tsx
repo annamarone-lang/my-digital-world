@@ -24,7 +24,6 @@ const journey = {
       title: "S@JEF – Kam-Daay Project",
       desc: "Led the Kam-Daay group and contributed as a technical lead to the development of a mobile CRM application, from requirements analysis to testing and presentation."
     },
-
     {
       year: "2026",
       title: "Now",
@@ -53,7 +52,6 @@ const journey = {
       title: "Projet S@JEF – Kam-Daay",
       desc: "Responsable du groupe Kam-Daay et responsable technique du développement d'une application mobile de gestion de la relation client (CRM), de l'analyse des besoins jusqu'aux tests et à la présentation."
     },
-
     {
       year: "2026",
       title: "Aujourd'hui",
@@ -62,15 +60,102 @@ const journey = {
   ]
 };
 
+const responsiveCSS = `
+  .about-header {
+    max-width: 760px;
+    margin-bottom: clamp(36px, 6vw, 72px);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .about-value-card {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .about-h3 {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Instrument Sans', sans-serif;
+    margin-bottom: 24px;
+  }
+
+  .about-timeline-item-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+
+  .about-timeline-title,
+  .about-timeline-desc,
+  .about-value-title,
+  .about-value-desc {
+    overflow-wrap: anywhere;
+  }
+
+  /* Tablette : une seule colonne */
+  @media (max-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .about-header {
+      max-width: 100%;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 560px) {
+    .about-values-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .about-value-card {
+      padding: 16px;
+    }
+    .about-h3 {
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+    .about-timeline-item-head {
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  /* Très petits écrans */
+  @media (max-width: 360px) {
+    .about-value-card {
+      padding: 14px;
+    }
+  }
+`
+
 export default function About({ lang, theme }: { lang: Lang; theme: Theme }) {
   const isDark = theme === "dark"
   const { ref, isVisible } = useIntersection()
   const steps = journey[lang]
+  const titleColor = isDark ? "#f1f5f9" : "#0f172a"
 
   return (
-    <section id="about" style={{ background: isDark ? "rgba(13,16,32,0.5)" : "rgba(241,245,249,0.5)" }}>
+    <section id="about" style={{ background: isDark ? "rgba(13,16,32,0.5)" : "rgba(241,245,249,0.5)", overflowX: "hidden" }}>
+      <style>{responsiveCSS}</style>
+
       <div ref={ref} className="section-wrapper">
-        <div style={{ maxWidth: "760px", marginBottom: "72px" }}>
+        <div className="about-header">
           <span className="section-label">{lang === "en" ? "// about me" : "// à propos"}</span>
           <h2 className={`section-title reveal ${isVisible ? "visible" : ""}`} style={{ color: isDark ? "#f8fafc" : "#0f172a" }}>
             {lang === "en" ? "Engineer by trade," : "Ingénieur de métier,"}
@@ -81,18 +166,18 @@ export default function About({ lang, theme }: { lang: Lang; theme: Theme }) {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start" }}>
+        <div className="about-grid">
           {/* Values */}
           <div>
-            <h3 className={`reveal ${isVisible ? "visible" : ""} delay-1`} style={{ fontSize: "18px", fontWeight: 700, fontFamily: "'Instrument Sans', sans-serif", marginBottom: "24px", color: isDark ? "#f1f5f9" : "#0f172a" }}>
+            <h3 className={`about-h3 reveal ${isVisible ? "visible" : ""} delay-1`} style={{ color: titleColor }}>
               {lang === "en" ? "My Values" : "Mes Valeurs"}
             </h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="about-values-grid">
               {values.map((v, i) => (
-                <div key={i} className={`glass-card reveal ${isVisible ? "visible" : ""}`} style={{ padding: "20px", borderRadius: "14px", transitionDelay: `${i * 80}ms` }}>
+                <div key={i} className={`about-value-card glass-card reveal ${isVisible ? "visible" : ""}`} style={{ transitionDelay: `${i * 80}ms` }}>
                   <div style={{ fontSize: "24px", marginBottom: "10px" }}>{v.icon}</div>
-                  <div style={{ fontSize: "13px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", marginBottom: "6px", fontFamily: "'Instrument Sans', sans-serif" }}>{v.title[lang]}</div>
-                  <div style={{ fontSize: "12px", color: "#94a3b8", lineHeight: 1.5 }}>{v.desc[lang]}</div>
+                  <div className="about-value-title" style={{ fontSize: "13px", fontWeight: 700, color: titleColor, marginBottom: "6px", fontFamily: "'Instrument Sans', sans-serif" }}>{v.title[lang]}</div>
+                  <div className="about-value-desc" style={{ fontSize: "12px", color: "#94a3b8", lineHeight: 1.5 }}>{v.desc[lang]}</div>
                 </div>
               ))}
             </div>
@@ -100,7 +185,7 @@ export default function About({ lang, theme }: { lang: Lang; theme: Theme }) {
 
           {/* Timeline */}
           <div>
-            <h3 className={`reveal ${isVisible ? "visible" : ""} delay-1`} style={{ fontSize: "18px", fontWeight: 700, fontFamily: "'Instrument Sans', sans-serif", marginBottom: "24px", color: isDark ? "#f1f5f9" : "#0f172a" }}>
+            <h3 className={`about-h3 reveal ${isVisible ? "visible" : ""} delay-1`} style={{ color: titleColor }}>
               {lang === "en" ? "My Journey" : "Mon Parcours"}
             </h3>
             <div style={{ position: "relative", paddingLeft: "28px" }}>
@@ -108,11 +193,11 @@ export default function About({ lang, theme }: { lang: Lang; theme: Theme }) {
               {steps.map((step, i) => (
                 <div key={i} className={`reveal ${isVisible ? "visible" : ""}`} style={{ marginBottom: "28px", transitionDelay: `${i * 100}ms`, position: "relative" }}>
                   <div style={{ position: "absolute", left: "-24px", top: "4px", width: "14px", height: "14px", borderRadius: "50%", background: i === steps.length - 1 ? "linear-gradient(135deg,#6366f1,#22d3ee)" : isDark ? "#1e2335" : "#e2e8f0", border: "2px solid #6366f1", zIndex: 1 }} />
-                  <div style={{ display: "flex", alignItems: "baseline", gap: "10px", marginBottom: "4px" }}>
+                  <div className="about-timeline-item-head">
                     <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "11px", color: "#6366f1", fontWeight: 600 }}>{step.year}</span>
-                    <span style={{ fontSize: "14px", fontWeight: 700, color: isDark ? "#f1f5f9" : "#0f172a", fontFamily: "'Instrument Sans', sans-serif" }}>{step.title}</span>
+                    <span className="about-timeline-title" style={{ fontSize: "14px", fontWeight: 700, color: titleColor, fontFamily: "'Instrument Sans', sans-serif" }}>{step.title}</span>
                   </div>
-                  <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
+                  <p className="about-timeline-desc" style={{ fontSize: "13px", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
                 </div>
               ))}
             </div>
